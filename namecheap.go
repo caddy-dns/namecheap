@@ -34,10 +34,12 @@ func (p *Provider) Provision(ctx caddy.Context) error {
 
 // UnmarshalCaddyfile sets up the DNS provider from Caddyfile tokens. Syntax:
 //
-// namecheap {
-//     api_key <api_key>
-//     user <user>
-// }
+//	namecheap {
+//	    api_key <api_key>
+//	    user <user>
+//	    api_endpoint https://api.namecheap.com/xml.response
+//	    client_ip <client_ip>
+//	}
 //
 // Expansion of placeholders is left to the JSON config caddy.Provisioner (above).
 func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
@@ -69,7 +71,7 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 				if d.NextArg() {
 					return d.ArgErr()
 				}
-			case "endpoint":
+			case "api_endpoint":
 				if p.Provider.APIEndpoint != "" {
 					return d.Err("API endpoint already set")
 				}

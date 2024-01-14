@@ -26,7 +26,9 @@ To use this module for the ACME DNS challenge, [configure the ACME issuer in you
       "provider": {
         "name": "namecheap",
         "api_key": "{env.NAMECHEAP_API_KEY}",
-        "user": "{env.NAMECHEAP_API_USER}"
+        "user": "{env.NAMECHEAP_API_USER}",
+        "api_endpoint": "https://api.namecheap.com/xml.response",
+        "client_ip": "deduced-automatically-if-not-set"
       }
     }
   }
@@ -37,9 +39,11 @@ or with the Caddyfile:
 
 ```
 tls {
-	dns namecheap {
+    dns namecheap {
         api_key {env.NAMECHEAP_API_KEY}
         user {env.NAMECHEAP_API_USER}
+        api_endpoint https://api.namecheap.com/xml.response
+        client_ip <client_ip>
     }
 }
 ```
@@ -55,8 +59,8 @@ A complete example
         dns namecheap {
             api_key {env.NAMECHEAP_API_KEY}
             user namecheap_api_username
+            api_endpoint https://api.namecheap.com/xml.response
             client_ip public_egress_ip
-            endpoint https://api.sandbox.namecheap.com/xml.response
         }
     }
 }
