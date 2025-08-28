@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/caddyserver/caddy/v2 v2.9.1
-	github.com/libdns/namecheap v0.0.0-20250228022813-d8b4b66c5072
+	github.com/libdns/namecheap v0.1.1-0.20250828012207-e1a51bc9ed35
 )
 
 require (
@@ -17,7 +17,7 @@ require (
 	github.com/google/pprof v0.0.0-20231212022811-ec68065c825e // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
-	github.com/libdns/libdns v0.2.3 // indirect
+	github.com/libdns/libdns v1.1.0 // indirect
 	github.com/mholt/acmez/v3 v3.0.0 // indirect
 	github.com/miekg/dns v1.1.62 // indirect
 	github.com/onsi/ginkgo/v2 v2.13.2 // indirect
