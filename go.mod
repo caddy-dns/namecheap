@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/caddyserver/caddy/v2 v2.9.1
-	github.com/libdns/namecheap v0.1.1-0.20250828012207-e1a51bc9ed35
+	github.com/libdns/namecheap v1.0.0
 )
 
 require (
