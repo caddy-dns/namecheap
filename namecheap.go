@@ -29,6 +29,8 @@ func (p *Provider) Provision(ctx caddy.Context) error {
 	p.Provider.User = caddy.NewReplacer().ReplaceAll(p.Provider.User, "")
 	p.Provider.APIEndpoint = caddy.NewReplacer().ReplaceAll(p.Provider.APIEndpoint, "")
 	p.Provider.ClientIP = caddy.NewReplacer().ReplaceAll(p.Provider.ClientIP, "")
+	p.Provider.SLD = caddy.NewReplacer().ReplaceAll(p.Provider.SLD, "")
+	p.Provider.TLD = caddy.NewReplacer().ReplaceAll(p.Provider.TLD, "")
 	return nil
 }
 
@@ -39,7 +41,13 @@ func (p *Provider) Provision(ctx caddy.Context) error {
 //	    user <user>
 //	    api_endpoint https://api.namecheap.com/xml.response
 //	    client_ip <client_ip>
+//	    sld <second-level-domain>   # optional explicit override
+//	    tld <top-level-domain>      # optional explicit override
 //	}
+//
+// `sld` and `tld` are optional. When both are set, the plugin uses them
+// directly instead of calling namecheap.domains.getTldList (which requires
+// a separate API access scope and may not return brand TLDs like `.spot`).
 //
 // Expansion of placeholders is left to the JSON config caddy.Provisioner (above).
 func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
@@ -93,6 +101,28 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 				if d.NextArg() {
 					return d.ArgErr()
 				}
+			case "sld":
+				if p.Provider.SLD != "" {
+					return d.Err("SLD already set")
+				}
+				if !d.NextArg() {
+					return d.ArgErr()
+				}
+				p.Provider.SLD = d.Val()
+				if d.NextArg() {
+					return d.ArgErr()
+				}
+			case "tld":
+				if p.Provider.TLD != "" {
+					return d.Err("TLD already set")
+				}
+				if !d.NextArg() {
+					return d.ArgErr()
+				}
+				p.Provider.TLD = d.Val()
+				if d.NextArg() {
+					return d.ArgErr()
+				}
 			default:
 				return d.Errf("unrecognized subdirective '%s'", d.Val())
 			}
@@ -103,6 +133,10 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	}
 	if p.Provider.User == "" {
 		return d.Err("missing user")
+	}
+	// `sld` and `tld` are paired — both or neither.
+	if (p.Provider.SLD == "") != (p.Provider.TLD == "") {
+		return d.Err("`sld` and `tld` must both be set or both omitted")
 	}
 	return nil
 }
